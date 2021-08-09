@@ -186,8 +186,6 @@ class TwilioProgrammableVoice {
         .map((jsonString) => json.decode(jsonString))
         .where((data) => _containsCall(data['type']))
         .map((data) {
-      print('------------------------ ${data.toString()}');
-
       switch (data['type']) {
         case 'CallInvite':
           currentCallEvent = CallInvite.from(data);

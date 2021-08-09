@@ -1,14 +1,15 @@
 import 'package:twilio_programmable_voice/twilio_programmable_voice.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-Future<void> backgroundMessageHandler(dynamic message) async {
+Future<void> backgroundMessageHandler(RemoteMessage message) async {
   // It's a data
-  if (message.containsKey("data") && message["data"] != null) {
+  if (message.data.isNotEmpty) {
     // It's a twilio data message
     print("In APP listener Message contains data");
-    if (message["data"].containsKey("twi_message_type")) {
+    if (message.data.containsKey("twi_message_type")) {
       print("Message is a Twilio Message : ");
 
-      final dataMap = Map<String, String>.from(message["data"]);
+      final dataMap = Map<String, String>.from(message.data);
 
       print('Data : ' + dataMap.toString());
 
