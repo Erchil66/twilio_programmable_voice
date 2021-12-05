@@ -48,15 +48,12 @@ class TwilioProgrammableVoice {
   /// [tokenManagerStrategies] an optional map where you can set defined the strategies you want to use to retrieve tokens
   ///
   /// [headers] optional headers, use by the GET access token strategy
-  Future<bool> setUp(
-      {required String accessTokenUrl,
-      Map<String, String>? tokenManagerStrategies,
-      Map<String, dynamic>? headers}) async {
-    _accessTokenUrl = accessTokenUrl;
-    getService<TokenService>()
-        .init(strategies: tokenManagerStrategies, headers: headers);
+  Future<bool> setUp({String? accessToken, String? fcmToken}) async {
+    // _accessTokenUrl = accessTokenUrl;
+    // getService<TokenService>()
+    //     .init(strategies: tokenManagerStrategies, headers: headers);
     final bool isRegistrationValid =
-        await registerVoice(accessTokenUrl: accessTokenUrl);
+        await registerVoice(accessToken: accessToken, fcmToken: fcmToken);
     return isRegistrationValid;
   }
 
@@ -70,26 +67,26 @@ class TwilioProgrammableVoice {
   ///
   /// [accessTokenUrl] an url which returns a valid accessToken when access
   /// by HTTP GET method
-  Future<bool> registerVoice({required String accessTokenUrl}) async {
+  Future<bool> registerVoice({String? accessToken, String? fcmToken}) async {
     bool isRegistrationValid = true;
 
-    String accessToken = await getService<TokenService>()
-        .getAccessToken(accessTokenUrl: accessTokenUrl);
+    // String accessToken = await getService<TokenService>()
+    //     .getAccessToken(accessTokenUrl: accessTokenUrl);
 
-    String? fcmToken = Platform.isAndroid
-        ? await getService<TokenService>().getFcmToken()
-        : null;
+    // String? fcmToken = Platform.isAndroid
+    //     ? await getService<TokenService>().getFcmToken()
+    //     : null;
 
     try {
       await _methodChannel.invokeMethod(
           'registerVoice', {"accessToken": accessToken, "fcmToken": fcmToken});
-      getService<TokenService>().persistAccessToken(accessToken: accessToken);
+      // getService<TokenService>().persistAccessToken(accessToken: accessToken);
     } catch (err) {
       print("registration failed");
       isRegistrationValid = false;
-      await getService<BoxService>()
-          .getBox()
-          .then((box) => box.delete(BoxKeys.ACCESS_TOKEN));
+      // await getService<BoxService>()
+      //     .getBox()
+      //     .then((box) => box.delete(BoxKeys.ACCESS_TOKEN));
       // TODO: doesn't this could make an infinity loop ? yes
       // registerVoice(accessTokenUrl: accessTokenUrl);
     }
@@ -100,24 +97,24 @@ class TwilioProgrammableVoice {
   ///
   /// [from] this device identity (or number)
   /// [to] the target identity (or number)
-  Future<bool> makeCall({required String from, required String to}) async {
-    if (_accessTokenUrl == null) {
-      throw UndefinedAccessTokenUrlException();
-    }
+  Future<bool> makeCall({String? from, String? to, String? accessToken}) async {
+    // if (_accessTokenUrl == null) {
+    //   throw UndefinedAccessTokenUrlException();
+    // }
 
-    final tokenService = getService<TokenService>();
+    // final tokenService = getService<TokenService>();
 
-    String accessToken =
-        await tokenService.getAccessToken(accessTokenUrl: _accessTokenUrl!);
+    // String accessToken =
+    //     await tokenService.getAccessToken(accessTokenUrl: _accessTokenUrl!);
 
-    final durationBeforeAccessTokenExpires =
-        getDurationBeforeTokenExpires(accessToken);
+    // final durationBeforeAccessTokenExpires =
+    //     getDurationBeforeTokenExpires(accessToken);
 
     // 15 secondes left to use the token, so we create a fresh one.
-    if (durationBeforeAccessTokenExpires.compareTo(Duration(seconds: 15)) < 0) {
-      accessToken = await tokenService.accessTokenStrategyBinder(
-          accessTokenUrl: _accessTokenUrl!);
-    }
+    // if (durationBeforeAccessTokenExpires.compareTo(Duration(seconds: 15)) < 0) {
+    //   accessToken = await tokenService.accessTokenStrategyBinder(
+    //       accessTokenUrl: _accessTokenUrl!);
+    // }
 
     return _methodChannel.invokeMethod<bool>('makeCall', {
       "from": from,

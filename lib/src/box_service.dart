@@ -1,23 +1,23 @@
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+// import 'package:hive/hive.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
 
-import 'box_utils.dart';
+// import 'box_utils.dart';
 
-class BoxService {
-  late Box _box;
-  late Future _boxCreated;
+// class BoxService {
+//   late Box _box;
+//   late Future _boxCreated;
 
-  BoxService() {
-    _boxCreated = _createBox();
-  }
+//   BoxService() {
+//     _boxCreated = _createBox();
+//   }
 
-  _createBox() async {
-    await Hive.initFlutter();
-    _box = await Hive.openBox(BoxKeys.PLUGIN_BOX_NAME);
-  }
+//   _createBox() async {
+//     await Hive.initFlutter();
+//     _box = await Hive.openBox(BoxKeys.PLUGIN_BOX_NAME);
+//   }
 
-  Future<Box> getBox() async {
-    await _boxCreated;
-    return _box;
-  }
-}
+//   Future<Box> getBox() async {
+//     await _boxCreated;
+//     return _box;
+//   }
+// }
