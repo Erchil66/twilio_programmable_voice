@@ -37,10 +37,12 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             final String fcmToken = call.argument("fcmToken");
             this.registerVoice(accessToken, fcmToken, result);
         } else if (call.method.equals("makeCall")) {
-            final String from = call.argument("from");
-            final String to = call.argument("to");
-            final String accessToken = call.argument("accessToken");
-            this.makeCall(from, to, accessToken, result);
+           final String from = call.argument("from");
+           final String to = call.argument("to");
+           final String phone_number = call.argument("phone_number");
+           final String country_code = call.argument("country_code");
+           final String accessToken = call.argument("accessToken");
+           this.makeCall(from, to, accessToken,phone_number ,country_code,result);
         } else if (call.method.equals("handleMessage")) {
             final Map<String, String> data = call.argument("messageData");
             this.handleMessage(data, result);
@@ -119,26 +121,31 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void makeCall(String from, String to, String accessToken, MethodChannel.Result result) {
-        Log.d(TAG, "makeCall");
+   private void makeCall(String from, String to, String accessToken, ,
+    String phone_number,
+    String country_code,		 
+   MethodChannel.Result result) {
+       Log.d(TAG, "makeCall");
 
-        Map<String, String> params = new HashMap<>();
-        params.put("From", from);
-        params.put("To", to);
+       Map<String, String> params = new HashMap<>();
+       params.put("From", from);
+       params.put("To", to);
+       params.put("phone_number",phone_number);
+       params.put("country_code",country_code);
 
-        try {
-            final ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
-                    .params(params)
-                    .build();
+       try {
+           final ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
+                   .params(params)
+                   .build();
 
-            Voice.connect(this.twilioProgrammableVoice.getActivity().getApplicationContext(), connectOptions, this.twilioProgrammableVoice);
-            result.success(true);
-        } catch (SecurityException error) {
-            Log.e("SecurityException throw", "Error was throw while connecting with twilio");
-            result.success(false);
-            throw error;
-        }
-    }
+           Voice.connect(this.twilioProgrammableVoice.getActivity().getApplicationContext(), connectOptions, this.twilioProgrammableVoice);
+           result.success(true);
+       } catch (SecurityException error) {
+           Log.e("SecurityException throw", "Error was throw while connecting with twilio");
+           result.success(false);
+           throw error;
+       }
+   }
 
     private void registerVoice(String accessToken, String fcmToken, MethodChannel.Result result) {
 

@@ -97,7 +97,12 @@ class TwilioProgrammableVoice {
   ///
   /// [from] this device identity (or number)
   /// [to] the target identity (or number)
-  Future<bool> makeCall({String? from, String? to, String? accessToken}) async {
+  Future<bool> makeCall(
+      {String? from,
+      String? to,
+      String? accessToken,
+      String? countrycode,
+      String? phonenumber}) async {
     // if (_accessTokenUrl == null) {
     //   throw UndefinedAccessTokenUrlException();
     // }
@@ -119,7 +124,9 @@ class TwilioProgrammableVoice {
     return _methodChannel.invokeMethod<bool>('makeCall', {
       "from": from,
       "to": to,
-      "accessToken": accessToken
+      "accessToken": accessToken,
+      "phone_number": phonenumber,
+      "country_code": countrycode
     }).then((bool? value) => value ?? false);
   }
 
