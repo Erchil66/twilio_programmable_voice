@@ -121,7 +121,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
     }
 
-   private void makeCall(String from, String to, String accessToken, ,
+   private void makeCall(String from, String to, String accessToken,
     String phone_number,
     String country_code,		 
    MethodChannel.Result result) {
